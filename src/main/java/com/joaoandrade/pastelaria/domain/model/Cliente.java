@@ -44,6 +44,7 @@ public class Cliente {
 	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Cliente() {
+		adicionarFuncao(Funcao.CLIENTE);
 	}
 
 	public Cliente(Long id, String nome, String cpf, String email, String senha, String telefone, String celular,
@@ -56,6 +57,7 @@ public class Cliente {
 		this.telefone = telefone;
 		this.celular = celular;
 		this.isContaAtiva = isContaAtiva;
+		adicionarFuncao(Funcao.CLIENTE);
 	}
 
 	public Long getId() {
@@ -144,6 +146,28 @@ public class Cliente {
 
 	public void setPedidos(List<Pedido> pedidos) {
 		this.pedidos = pedidos;
+	}
+
+	public boolean isAdmin() {
+		return funcoes.contains(Funcao.ADMIN);
+	}
+
+	public void adicionarFuncao(Funcao funcao) {
+		this.funcoes.add(funcao);
+	}
+
+	public void removerFuncao(Funcao funcao) {
+		this.funcoes.remove(funcao);
+	}
+
+	public void ativarConta() {
+		setIsContaAtiva(true);
+
+	}
+
+	public void desativarConta() {
+		setIsContaAtiva(false);
+
 	}
 
 	@Override
