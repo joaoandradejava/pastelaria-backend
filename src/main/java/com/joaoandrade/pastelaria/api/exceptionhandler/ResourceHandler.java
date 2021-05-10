@@ -1,5 +1,6 @@
 package com.joaoandrade.pastelaria.api.exceptionhandler;
 
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.joaoandrade.pastelaria.domain.exception.EntidadeEmUsoException;
+import com.joaoandrade.pastelaria.domain.exception.EntidadeNaoProcessavelException;
 import com.joaoandrade.pastelaria.domain.exception.NegocioException;
 import com.joaoandrade.pastelaria.domain.exception.ObjetoNaoEncontradoException;
 
@@ -69,6 +72,47 @@ public class ResourceHandler extends ResponseEntityExceptionHandler {
 		HttpStatus status = HttpStatus.CONFLICT;
 		Error error = Error.ENTIDADE_EM_USO;
 		String message = ex.getMessage();
+		ProblemDetail problemDetail = new ProblemDetail(error.getType(), error.getTitle(), status.value(), message,
+				message);
+
+		return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
+	}
+
+	@ExceptionHandler(EntidadeNaoProcessavelException.class)
+	public ResponseEntity<Object> handleEntidadeNaoProcessavel(EntidadeNaoProcessavelException ex, WebRequest request) {
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		Error error = Error.ENTIDADE_NAO_PROCESSAVEL;
+		String message = ex.getMessage();
+		ProblemDetail problemDetail = new ProblemDetail(error.getType(), error.getTitle(), status.value(), message,
+				message);
+
+		return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
+	}
+
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<Object> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex, WebRequest request) {
+		Throwable cause = ex.getCause().getCause();
+
+		if (cause instanceof FileSizeLimitExceededException) {
+			return handleFileSizeLimitExceeded((FileSizeLimitExceededException) cause, request);
+		}
+
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		Error error = Error.TAMANHO_MAXIMO_UPLOAD_EXCEDIDO;
+		String message = "tamanho máximo de upload excedido";
+		ProblemDetail problemDetail = new ProblemDetail(error.getType(), error.getTitle(), status.value(), message,
+				message);
+
+		return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
+	}
+
+	private ResponseEntity<Object> handleFileSizeLimitExceeded(FileSizeLimitExceededException ex, WebRequest request) {
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		Error error = Error.TAMANHO_MAXIMO_UPLOAD_EXCEDIDO;
+		Double tamanho = 1048576.0;
+		Long tamanhoMaximoDoArquivo = Math.round(ex.getPermittedSize() / tamanho);
+		String message = String
+				.format(String.format("Faça upload de uma imagem menor que %d MB.", tamanhoMaximoDoArquivo));
 		ProblemDetail problemDetail = new ProblemDetail(error.getType(), error.getTitle(), status.value(), message,
 				message);
 

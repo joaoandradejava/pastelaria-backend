@@ -17,7 +17,7 @@ public class Produto {
 	private Double preco;
 	private String descricao;
 	private String avatarUrl;
-	private Integer desconto;
+	private Integer desconto = 0;
 	private Boolean isTemDesconto = Boolean.FALSE;
 	private Boolean isTemEstoque = Boolean.FALSE;
 
@@ -111,6 +111,25 @@ public class Produto {
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public void adicionarDesconto(Integer desconto) {
+		setDesconto(desconto);
+		setIsTemDesconto(true);
+	}
+
+	public void removerDesconto() {
+		setDesconto(0);
+		setIsTemDesconto(false);
+	}
+
+	public void adicionarFoto(String fotoEmBase64) {
+		setAvatarUrl(fotoEmBase64);
+
+	}
+
+	public void removerFoto() {
+		setAvatarUrl(null);
 	}
 
 	@Override

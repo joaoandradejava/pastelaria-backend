@@ -9,7 +9,9 @@ public enum Error {
 	PROPRIEDADE_NAO_RECONHECIDA("propriedade-nao-reconhecida", "Propriedade não reconhecida"),
 	METODO_NAO_SUPORTADO("metodo-nao-suportado", "Método não suportado"),
 	TIPO_INCOPATIVEL("tipo-incopativel", "Tipo incopativel"),
-	ERRO_INTERNO_NO_SERVIDOR("erro-interno-no-servidor", "Erro interno no servidor");
+	ERRO_INTERNO_NO_SERVIDOR("erro-interno-no-servidor", "Erro interno no servidor"),
+	ENTIDADE_NAO_PROCESSAVEL("entidade-nao-processavel", "Entidade não processavel"),
+	TAMANHO_MAXIMO_UPLOAD_EXCEDIDO("tamanho-maximo-upload-excedido", "Tamanho máximo upload excedido");
 
 	private String type;
 	private String title;
