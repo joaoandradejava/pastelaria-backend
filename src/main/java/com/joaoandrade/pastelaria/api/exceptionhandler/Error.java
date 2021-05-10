@@ -11,7 +11,9 @@ public enum Error {
 	TIPO_INCOPATIVEL("tipo-incopativel", "Tipo incopativel"),
 	ERRO_INTERNO_NO_SERVIDOR("erro-interno-no-servidor", "Erro interno no servidor"),
 	ENTIDADE_NAO_PROCESSAVEL("entidade-nao-processavel", "Entidade não processavel"),
-	TAMANHO_MAXIMO_UPLOAD_EXCEDIDO("tamanho-maximo-upload-excedido", "Tamanho máximo upload excedido");
+	TAMANHO_MAXIMO_UPLOAD_EXCEDIDO("tamanho-maximo-upload-excedido", "Tamanho máximo upload excedido"),
+	CREDENCIAIS_INCORRETAS("credenciais-incorretas", "Credenciais incorretas"),
+	ACESSO_NEGADO("acesso-negado", "Acesso negado");
 
 	private String type;
 	private String title;

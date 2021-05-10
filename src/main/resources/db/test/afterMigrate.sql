@@ -27,8 +27,8 @@ insert into produto(nome, preco, descricao, desconto, is_tem_desconto, is_tem_es
 ('Skol Puro Malte 450ml', 2.79, 'Aquele famosa Skol pae', 0.0, 'FALSE', 'TRUE', 3);
 
 insert into cliente(nome, cpf, email, senha, telefone, is_conta_ativa) values
-('João Andrade', '91189329085', 'john@gmail.com', '123', '81993332222', 'TRUE'),
-('Leonardo Leitão', '09240454004', 'leo@gmail.com', '123', '81993332211', 'TRUE');
+('João Andrade', '91189329085', 'john@gmail.com', '$2a$10$YXG.hySz34v/Vj5ak7KOGOBmi/TNMP.EWoJj8Nn/Z8OQbVLM9ZIhO', '81993332222', 'TRUE'),
+('Leonardo Leitão', '09240454004', 'leo@gmail.com', '$2a$10$YXG.hySz34v/Vj5ak7KOGOBmi/TNMP.EWoJj8Nn/Z8OQbVLM9ZIhO', '81993332211', 'TRUE');
 
 insert into funcao(cliente_id, funcoes) values
 (1, 'ADMIN'), (1, 'CLIENTE'),

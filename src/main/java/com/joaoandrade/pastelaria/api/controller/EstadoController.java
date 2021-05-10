@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,6 +69,7 @@ public class EstadoController {
 		return estadoModelAssembler.toModel(estado);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public EstadoModel cadastrar(@Valid @RequestBody EstadoInput estadoInput) {
@@ -76,6 +78,7 @@ public class EstadoController {
 		return estadoModelAssembler.toModel(estado);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public EstadoModel atualizar(@Valid @RequestBody EstadoInput estadoInput, @PathVariable Long id) {
 		Estado estado = cadastroEstadoService.buscarPorId(id);
@@ -85,6 +88,7 @@ public class EstadoController {
 		return estadoModelAssembler.toModel(estado);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void deletarPorId(@PathVariable Long id) {

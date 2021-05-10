@@ -1,5 +1,7 @@
 package com.joaoandrade.pastelaria.domain.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +22,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 	@Query("select p from Produto p where p.isTemEstoque = true and lower(p.nome) like lower(concat('%', ?1, '%'))")
 	Page<Produto> buscarTodosProdutosDisponiveisNoEstoqueEPorNome(String nome, Pageable pageable);
 
+	@Query("select p from Produto p where p.isTemEstoque = true and p.id = ?1")
+	Optional<Produto> buscarPorIdEDisponivelNoEstoque(Long id);
 }

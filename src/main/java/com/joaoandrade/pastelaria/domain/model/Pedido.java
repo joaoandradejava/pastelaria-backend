@@ -124,6 +124,19 @@ public class Pedido {
 		this.itens = itens;
 	}
 
+	public void adicionarItemPedido(ItemPedido itemPedido) {
+		getItens().add(itemPedido);
+	}
+
+	public void calcularValorTotal() {
+		double valorTotal = 0.0;
+		for (ItemPedido itens : this.itens) {
+			valorTotal += itens.calcularValorTotalDoItemPedido();
+		}
+
+		this.valorTotal = valorTotal;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

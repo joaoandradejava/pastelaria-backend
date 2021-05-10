@@ -54,6 +54,12 @@ public class ItemPedido {
 		this.desconto = desconto;
 	}
 
+	public double calcularValorTotalDoItemPedido() {
+		double desconto = this.desconto / 100.0;
+
+		return (this.valor * this.quantidade) * (1 - desconto);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

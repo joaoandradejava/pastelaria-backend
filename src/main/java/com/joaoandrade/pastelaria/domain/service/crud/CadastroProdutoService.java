@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joaoandrade.pastelaria.domain.exception.EntidadeEmUsoException;
+import com.joaoandrade.pastelaria.domain.exception.NegocioException;
 import com.joaoandrade.pastelaria.domain.exception.ProdutoNaoEncontradoException;
 import com.joaoandrade.pastelaria.domain.model.Produto;
 import com.joaoandrade.pastelaria.domain.repository.ProdutoRepository;
@@ -45,6 +46,13 @@ public class CadastroProdutoService {
 
 	public Produto buscarPorId(Long id) {
 		return repository.findById(id).orElseThrow(() -> new ProdutoNaoEncontradoException(id));
+	}
+
+	public Produto buscarPorIdEDisponivelNoEstoque(Long id) {
+		Produto produto = buscarPorId(id);
+
+		return repository.buscarPorIdEDisponivelNoEstoque(id).orElseThrow(() -> new NegocioException(
+				String.format("O Produto '%s' não estar mais disponivel no estoque! :(", produto.getNome())));
 	}
 
 	@Transactional

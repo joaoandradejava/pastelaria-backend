@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +56,7 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoService produtoService;
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
 	public List<ProdutoModel> buscarTodos() {
 		List<Produto> lista = cadastroProdutoService.buscarTodos();
@@ -62,6 +64,7 @@ public class ProdutoController {
 		return produtoModelAssembler.toCollectionModel(lista);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/paginacao")
 	public Page<ProdutoModel> buscarTodosPorPaginacao(Pageable pageable, String nome) {
 		Page<Produto> page;
@@ -98,6 +101,7 @@ public class ProdutoController {
 		return produtoFullModelAssembler.toModel(produto);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ProdutoFullModel cadastrar(@Valid @RequestBody ProdutoInput produtoInput) {
@@ -110,6 +114,7 @@ public class ProdutoController {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ProdutoFullModel atualizar(@Valid @RequestBody ProdutoInput produtoInput, @PathVariable Long id) {
 		try {
@@ -123,12 +128,14 @@ public class ProdutoController {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void deletarPorId(@PathVariable Long id) {
 		cadastroProdutoService.deletarPorId(id);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}/desconto")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void adicionarDesconto(@Valid @RequestBody ProdutoDescontoInput produtoDescontoInput,
@@ -136,24 +143,28 @@ public class ProdutoController {
 		produtoService.adicionarDesconto(produtoDescontoInput.getDesconto(), id);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}/desconto")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void removerDesconto(@PathVariable Long id) {
 		produtoService.removerDesconto(id);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}/estoque")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void colocarProdutoDisponivelNoEstoque(@PathVariable Long id) {
 		produtoService.colocarProdutoDisponivelNoEstoque(id);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}/estoque")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void tirarProdutoDisponivelNoEstoque(@PathVariable Long id) {
 		produtoService.tirarProdutoDisponivelNoEstoque(id);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}/foto")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void adicionarFoto(MultipartFile foto, @PathVariable Long id) {
@@ -170,6 +181,7 @@ public class ProdutoController {
 
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}/foto")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void removerFoto(@PathVariable Long id) {

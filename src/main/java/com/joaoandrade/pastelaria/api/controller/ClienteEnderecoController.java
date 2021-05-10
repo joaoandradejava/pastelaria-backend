@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +20,13 @@ import com.joaoandrade.pastelaria.api.assembler.EnderecoModelAssembler;
 import com.joaoandrade.pastelaria.api.disassembler.EnderecoInputDisassembler;
 import com.joaoandrade.pastelaria.api.input.EnderecoInput;
 import com.joaoandrade.pastelaria.api.model.EnderecoModel;
+import com.joaoandrade.pastelaria.core.security.ClienteAutenticado;
+import com.joaoandrade.pastelaria.domain.exception.AcessoNegadoException;
 import com.joaoandrade.pastelaria.domain.exception.EstadoNaoEncontradoException;
 import com.joaoandrade.pastelaria.domain.exception.NegocioException;
 import com.joaoandrade.pastelaria.domain.model.Cliente;
 import com.joaoandrade.pastelaria.domain.model.Endereco;
+import com.joaoandrade.pastelaria.domain.service.PermissaoService;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroClienteEnderecoService;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroClienteService;
 
@@ -42,15 +46,30 @@ public class ClienteEnderecoController {
 	@Autowired
 	private EnderecoInputDisassembler enderecoInputDisassembler;
 
+	@Autowired
+	private PermissaoService permissaoService;
+
 	@GetMapping
-	public List<EnderecoModel> buscarTodos(@PathVariable Long clienteId) {
+	public List<EnderecoModel> buscarTodos(@PathVariable Long clienteId,
+			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
+		if (permissaoService.isNaoTemAutorizacaoDeAdministrador(clienteAutenticado, clienteId)) {
+			throw new AcessoNegadoException(
+					"Você não tem autorização para acessar as informações dos endereços de outro cliente no sistema!");
+		}
+
 		Cliente cliente = cadastroClienteService.buscarPorId(clienteId);
 
 		return enderecoModelAssembler.toCollectionModel(cliente.getEnderecos());
 	}
 
 	@GetMapping("/{enderecoId}")
-	public EnderecoModel buscarEnderecoDoCliente(@PathVariable Long clienteId, @PathVariable Long enderecoId) {
+	public EnderecoModel buscarEnderecoDoCliente(@PathVariable Long clienteId, @PathVariable Long enderecoId,
+			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
+		if (permissaoService.isNaoTemAutorizacaoDeAdministrador(clienteAutenticado, clienteId)) {
+			throw new AcessoNegadoException(
+					"Você não tem autorização para acessar a informação do endereço de outro cliente no sistema!");
+		}
+
 		Endereco endereco = cadastroClienteEnderecoService.buscarEnderecoDoCliente(clienteId, enderecoId);
 
 		return enderecoModelAssembler.toModel(endereco);
@@ -58,7 +77,13 @@ public class ClienteEnderecoController {
 
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public EnderecoModel cadastrar(@Valid @RequestBody EnderecoInput enderecoInput, @PathVariable Long clienteId) {
+	public EnderecoModel cadastrar(@Valid @RequestBody EnderecoInput enderecoInput, @PathVariable Long clienteId,
+			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
+		if (permissaoService.isNaoTemAutorizacaoDeAdministrador(clienteAutenticado, clienteId)) {
+			throw new AcessoNegadoException(
+					"Você não tem autorização para cadastrar o endereço de um outro cliente no sistema!");
+		}
+
 		try {
 			Endereco endereco = cadastroClienteEnderecoService
 					.cadastrar(enderecoInputDisassembler.toDomainModel(enderecoInput), clienteId);
@@ -71,7 +96,13 @@ public class ClienteEnderecoController {
 
 	@DeleteMapping("/{enderecoId}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void deletarEnderecoDoCliente(@PathVariable Long clienteId, @PathVariable Long enderecoId) {
+	public void deletarEnderecoDoCliente(@PathVariable Long clienteId, @PathVariable Long enderecoId,
+			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
+		if (permissaoService.isNaoTemAutorizacaoDeAdministrador(clienteAutenticado, clienteId)) {
+			throw new AcessoNegadoException(
+					"Você não tem autorização para deletar o endereço de outroo cliente no sistema!");
+		}
+
 		cadastroClienteEnderecoService.deletarEnderecoDoCliente(clienteId, enderecoId);
 	}
 
