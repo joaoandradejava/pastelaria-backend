@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.joaoandrade.pastelaria.domain.exception.ClienteNaoEncontradoException;
 import com.joaoandrade.pastelaria.domain.exception.EntidadeEmUsoException;
+import com.joaoandrade.pastelaria.domain.exception.NegocioException;
 import com.joaoandrade.pastelaria.domain.model.Cliente;
 import com.joaoandrade.pastelaria.domain.repository.ClienteRepository;
 import com.joaoandrade.pastelaria.domain.service.validation.CpfUniqueValidator;
@@ -48,6 +49,11 @@ public class CadastroClienteService {
 
 	public Cliente buscarPorId(Long id) {
 		return repository.findById(id).orElseThrow(() -> new ClienteNaoEncontradoException(id));
+	}
+
+	public Cliente buscarPorEmail(String email) {
+		return repository.findByEmail(email).orElseThrow(() -> new NegocioException(
+				String.format("Não existe nenhum cliente com o email '%s' cadastrado no sistema!", email)));
 	}
 
 	@Transactional

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -27,12 +28,16 @@ import com.joaoandrade.pastelaria.api.disassembler.ClienteCreateInputDisassemble
 import com.joaoandrade.pastelaria.api.disassembler.ClienteUpdateInputDisassembler;
 import com.joaoandrade.pastelaria.api.input.ClienteCreateInput;
 import com.joaoandrade.pastelaria.api.input.ClienteUpdateInput;
+import com.joaoandrade.pastelaria.api.input.EsqueciSenhaInput;
+import com.joaoandrade.pastelaria.api.input.MudancaSenhaInput;
 import com.joaoandrade.pastelaria.api.model.ClienteFullModel;
 import com.joaoandrade.pastelaria.api.model.ClienteModel;
 import com.joaoandrade.pastelaria.core.security.ClienteAutenticado;
 import com.joaoandrade.pastelaria.domain.exception.AcessoNegadoException;
 import com.joaoandrade.pastelaria.domain.exception.NegocioException;
 import com.joaoandrade.pastelaria.domain.model.Cliente;
+import com.joaoandrade.pastelaria.domain.observer.CadastroClienteObserver;
+import com.joaoandrade.pastelaria.domain.observer.EsqueciASenhaObserver;
 import com.joaoandrade.pastelaria.domain.service.ClienteService;
 import com.joaoandrade.pastelaria.domain.service.PermissaoService;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroClienteService;
@@ -61,6 +66,9 @@ public class ClienteController {
 
 	@Autowired
 	private PermissaoService permissaoService;
+
+	@Autowired
+	private ApplicationEventPublisher applicationEventPublisher;
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
@@ -109,6 +117,7 @@ public class ClienteController {
 		Cliente cliente = cadastroClienteService
 				.cadastrar(clienteCreateInputDisassembler.toDomainModel(clienteCreateInput));
 
+		applicationEventPublisher.publishEvent(new CadastroClienteObserver(cliente));
 		return clienteModelAssembler.toModel(cliente);
 	}
 
@@ -182,5 +191,22 @@ public class ClienteController {
 		}
 
 		clienteService.tirarFuncaoDeAdmin(id);
+	}
+
+	@PutMapping("/senha")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void mudarSenha(@Valid @RequestBody MudancaSenhaInput mudancaSenhaInput,
+			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
+		clienteService.mudarSenha(clienteAutenticado.getId(), mudancaSenhaInput.getSenhaAtual(),
+				mudancaSenhaInput.getNovaSenha());
+	}
+
+	@PutMapping("/esqueci-senha")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void esqueciASenha(@Valid @RequestBody EsqueciSenhaInput esqueciSenhaInput) {
+		String novaSenha = clienteService.esqueciASenha(esqueciSenhaInput.getEmail());
+		Cliente cliente = cadastroClienteService.buscarPorEmail(esqueciSenhaInput.getEmail());
+
+		applicationEventPublisher.publishEvent(new EsqueciASenhaObserver(cliente, novaSenha));
 	}
 }

@@ -25,8 +25,10 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.joaoandrade.pastelaria.domain.exception.AcessoNegadoException;
 import com.joaoandrade.pastelaria.domain.exception.EntidadeEmUsoException;
 import com.joaoandrade.pastelaria.domain.exception.EntidadeNaoProcessavelException;
+import com.joaoandrade.pastelaria.domain.exception.ErroInternoNoServidorException;
 import com.joaoandrade.pastelaria.domain.exception.NegocioException;
 import com.joaoandrade.pastelaria.domain.exception.ObjetoNaoEncontradoException;
+import com.joaoandrade.pastelaria.domain.exception.PrepararMimeMessageException;
 
 @ControllerAdvice
 public class ResourceHandler extends ResponseEntityExceptionHandler {
@@ -37,10 +39,21 @@ public class ResourceHandler extends ResponseEntityExceptionHandler {
 	private MessageSource messageSource;
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<Object> handleErroInternoNoServidor(Exception ex, WebRequest request) {
+	public ResponseEntity<Object> handleExceptionGenerico(Exception ex, WebRequest request) {
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 		Error error = Error.ERRO_INTERNO_NO_SERVIDOR;
 		String message = "Ocorreu um erro inesperado no servidor(backend), se o problema persistir recomendo que entre em contato com o desenvolvedor da API.";
+		ProblemDetail problemDetail = new ProblemDetail(error.getType(), error.getTitle(), status.value(), message,
+				STANDARD_MESSAGE);
+
+		return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
+	}
+
+	@ExceptionHandler(ErroInternoNoServidorException.class)
+	public ResponseEntity<Object> handleErroInternoNoServidor(ErroInternoNoServidorException ex, WebRequest request) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		Error error = Error.ERRO_INTERNO_NO_SERVIDOR;
+		String message = ex.getMessage();
 		ProblemDetail problemDetail = new ProblemDetail(error.getType(), error.getTitle(), status.value(), message,
 				STANDARD_MESSAGE);
 
@@ -54,6 +67,17 @@ public class ResourceHandler extends ResponseEntityExceptionHandler {
 		String message = "Acesso negado!";
 		ProblemDetail problemDetail = new ProblemDetail(error.getType(), error.getTitle(), status.value(), message,
 				message);
+
+		return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
+	}
+
+	@ExceptionHandler(PrepararMimeMessageException.class)
+	public ResponseEntity<Object> handlePrepararMimeMessage(PrepararMimeMessageException ex, WebRequest request) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		Error error = Error.ERRO_INTERNO_NO_SERVIDOR;
+		String message = ex.getMessage();
+		ProblemDetail problemDetail = new ProblemDetail(error.getType(), error.getTitle(), status.value(), message,
+				STANDARD_MESSAGE);
 
 		return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
 	}
