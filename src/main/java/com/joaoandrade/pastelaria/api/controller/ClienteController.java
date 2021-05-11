@@ -42,6 +42,10 @@ import com.joaoandrade.pastelaria.domain.service.ClienteService;
 import com.joaoandrade.pastelaria.domain.service.PermissaoService;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroClienteService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Cliente Controller")
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
@@ -70,6 +74,7 @@ public class ClienteController {
 	@Autowired
 	private ApplicationEventPublisher applicationEventPublisher;
 
+	@Operation(summary = "Busca todos os clientes - ADMIN", description = "Busca todos os clientes - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
 	public List<ClienteModel> buscarTodos() {
@@ -78,6 +83,7 @@ public class ClienteController {
 		return clienteModelAssembler.toCollectionModel(lista);
 	}
 
+	@Operation(summary = "Busca todos os clientes por paginação - ADMIN", description = "Busca todos os clientes por paginação - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/paginacao")
 	public Page<ClienteModel> buscarTodosPorPaginacao(Pageable pageable, String nome) {
@@ -94,6 +100,7 @@ public class ClienteController {
 		return page.map(cliente -> clienteModelAssembler.toModel(cliente));
 	}
 
+	@Operation(summary = "Busca os dados do cliente por id", description = "Busca os dados do cliente por id")
 	@GetMapping("/{id}")
 	public ClienteFullModel buscarPorId(@PathVariable Long id,
 			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
@@ -107,6 +114,7 @@ public class ClienteController {
 		return clienteFullModelAssembler.toModel(cliente);
 	}
 
+	@Operation(summary = "Cadastra um novo cliente", description = "Cadastra um novo cliente")
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ClienteModel cadastrar(@Valid @RequestBody ClienteCreateInput clienteCreateInput) {
@@ -121,6 +129,7 @@ public class ClienteController {
 		return clienteModelAssembler.toModel(cliente);
 	}
 
+	@Operation(summary = "Atualiza o cliente por id", description = "Atualiza o cliente por id")
 	@PutMapping("/{id}")
 	public ClienteModel atualizar(@Valid @RequestBody ClienteUpdateInput clienteUpdateInput, @PathVariable Long id,
 			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
@@ -136,6 +145,7 @@ public class ClienteController {
 		return clienteModelAssembler.toModel(cliente);
 	}
 
+	@Operation(summary = "Deleta o cliente por id", description = "Deleta o cliente por id")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void deletarPorId(@PathVariable Long id, @AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
@@ -147,6 +157,7 @@ public class ClienteController {
 		cadastroClienteService.deletarPorId(id);
 	}
 
+	@Operation(summary = "Ativa a conta do cliente por id", description = "Ativa a conta do cliente por id")
 	@PutMapping("/{id}/conta-ativa")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void ativarConta(@PathVariable Long id, @AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
@@ -158,6 +169,7 @@ public class ClienteController {
 		clienteService.ativarConta(id);
 	}
 
+	@Operation(summary = "desativa a conta do cliente por id", description = "desativa a conta do cliente por id")
 	@DeleteMapping("/{id}/conta-ativa")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void desativarConta(@PathVariable Long id, @AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
@@ -169,6 +181,7 @@ public class ClienteController {
 		clienteService.desativarConta(id);
 	}
 
+	@Operation(summary = "Dar função de admin a um cliente", description = "Dar função de admin a um cliente")
 	@PutMapping("/{id}/admin")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void darFuncaoDeAdmin(@PathVariable Long id,
@@ -181,6 +194,7 @@ public class ClienteController {
 		clienteService.darFuncaoDeAdmin(id);
 	}
 
+	@Operation(summary = "tira a função de admin de um cliente", description = "tira a função de admin de um cliente")
 	@DeleteMapping("/{id}/admin")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void tirarFuncaoDeAdmin(@PathVariable Long id,
@@ -193,6 +207,7 @@ public class ClienteController {
 		clienteService.tirarFuncaoDeAdmin(id);
 	}
 
+	@Operation(summary = "Muda a senha do cliente", description = "Muda a senha do cliente")
 	@PutMapping("/senha")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void mudarSenha(@Valid @RequestBody MudancaSenhaInput mudancaSenhaInput,
@@ -201,11 +216,12 @@ public class ClienteController {
 				mudancaSenhaInput.getNovaSenha());
 	}
 
+	@Operation(summary = "Envia uma nova senha por email do cliente", description = "Envia uma nova senha por email do cliente")
 	@PutMapping("/esqueci-senha")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void esqueciASenha(@Valid @RequestBody EsqueciSenhaInput esqueciSenhaInput) {
-		String novaSenha = clienteService.esqueciASenha(esqueciSenhaInput.getEmail());
 		Cliente cliente = cadastroClienteService.buscarPorEmail(esqueciSenhaInput.getEmail());
+		String novaSenha = clienteService.esqueciASenha(cliente);
 
 		applicationEventPublisher.publishEvent(new EsqueciASenhaObserver(cliente, novaSenha));
 	}

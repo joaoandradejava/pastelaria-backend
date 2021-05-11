@@ -44,6 +44,10 @@ import com.joaoandrade.pastelaria.domain.service.crud.CadastroClienteEnderecoSer
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroClienteService;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroProdutoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Pedido Controller")
 @RestController
 @RequestMapping("/pedidos")
 public class PedidoController {
@@ -66,6 +70,7 @@ public class PedidoController {
 	@Autowired
 	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
 
+	@Operation(summary = "Busca todos os pedidos do sistema - ADMIN", description = "Busca todos os pedidos do sistema - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/buscar-todos/paginacao")
 	public Page<PedidoResumoModel> buscarTodosOsPedidosDoSistema(
@@ -75,6 +80,7 @@ public class PedidoController {
 		return page.map(pedido -> pedidoResumoModelAssembler.toModel(pedido));
 	}
 
+	@Operation(summary = "Busca todos os pedidos do cliente", description = "Busca todos os pedidos do cliente")
 	@GetMapping
 	public Page<PedidoResumoModel> buscarTodosPedidosDoCliente(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
@@ -84,6 +90,7 @@ public class PedidoController {
 		return page.map(pedido -> pedidoResumoModelAssembler.toModel(pedido));
 	}
 
+	@Operation(summary = "Busca o pedido do cliente", description = "Busca o pedido do cliente")
 	@GetMapping("/{pedidoId}")
 	public PedidoFullModel buscarPedidoDoCliente(@AuthenticationPrincipal ClienteAutenticado clienteAutenticado,
 			@PathVariable Long pedidoId) {
@@ -92,6 +99,7 @@ public class PedidoController {
 		return pedidoFullModelAssembler.toModel(pedido);
 	}
 
+	@Operation(summary = "Faz um novo pedido", description = "Faz um novo pedido")
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public PedidoFullModel fazerPedido(@Valid @RequestBody PedidoInput pedidoInput,
@@ -107,6 +115,7 @@ public class PedidoController {
 		}
 	}
 
+	@Operation(summary = "Cancela o pedido", description = "Cancela o pedido")
 	@PutMapping("/{pedidoId}/cancelado")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void cancelarPedido(@PathVariable Long pedidoId,
@@ -115,6 +124,7 @@ public class PedidoController {
 
 	}
 
+	@Operation(summary = "Saiu para a entrega pedido - ADMIN", description = "Saiu para a entrega pedido - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{pedidoId}/saiu-para-entrega")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -122,6 +132,7 @@ public class PedidoController {
 		pedidoService.sairParaEntrega(pedidoId);
 	}
 
+	@Operation(summary = "Conclui o pedido - ADMIN", description = "Conclui o pedido - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{pedidoId}/concluido")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -129,6 +140,7 @@ public class PedidoController {
 		pedidoService.concluido(pedidoId);
 	}
 
+	@Operation(summary = "Cancela o pedido caso ocorra algum imprevisto - ADMIN", description = "Cancela o pedido caso ocorra algum imprevisto - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{pedidoId}/cancelado-imprevisto")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)

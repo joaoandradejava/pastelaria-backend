@@ -27,6 +27,10 @@ import com.joaoandrade.pastelaria.api.model.CategoriaModel;
 import com.joaoandrade.pastelaria.domain.model.Categoria;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroCategoriaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Categoria Controller")
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {
@@ -40,6 +44,7 @@ public class CategoriaController {
 	@Autowired
 	private CategoriaInputDisassembler categoriaInputDisassembler;
 
+	@Operation(summary = "Busca todas as categorias do banco de dados", description = "Busca todas as categorias do banco de dados")
 	@GetMapping
 	public List<CategoriaModel> buscarTodos() {
 		List<Categoria> lista = cadastroCategoriaService.buscarTodos();
@@ -47,6 +52,7 @@ public class CategoriaController {
 		return categoriaModelAssembler.toCollectionModel(lista);
 	}
 
+	@Operation(summary = "Busca todas as categorias de forma paginada do banco de dados", description = "Busca todas as categorias de forma paginada do banco de dados")
 	@GetMapping("/paginacao")
 	public Page<CategoriaModel> buscarTodosPorPaginacao(Pageable pageable, String nome) {
 		Page<Categoria> page;
@@ -62,6 +68,7 @@ public class CategoriaController {
 		return page.map(categoria -> categoriaModelAssembler.toModel(categoria));
 	}
 
+	@Operation(summary = "Busca uma categoria por id no banco de dados", description = "Busca uma categoria por id no banco de dados")
 	@GetMapping("/{id}")
 	public CategoriaModel buscarPorId(@PathVariable Long id) {
 		Categoria categoria = cadastroCategoriaService.buscarPorId(id);
@@ -69,6 +76,7 @@ public class CategoriaController {
 		return categoriaModelAssembler.toModel(categoria);
 	}
 
+	@Operation(summary = "Cadastra uma nova categoria no banco de dados - ADMIN", description = "Cadastra uma nova categoria no banco de dados - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
@@ -79,6 +87,7 @@ public class CategoriaController {
 		return categoriaModelAssembler.toModel(categoria);
 	}
 
+	@Operation(summary = "Atualiza a categoria pelo seu id - ADMIN", description = "Atualiza a categoria pelo seu id - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public CategoriaModel atualizar(@Valid @RequestBody CategoriaInput categoriaInput, @PathVariable Long id) {
@@ -89,6 +98,7 @@ public class CategoriaController {
 		return categoriaModelAssembler.toModel(categoria);
 	}
 
+	@Operation(summary = "Deleta a categoria pelo seu id - ADMIN", description = "Deleta a categoria pelo seu id - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)

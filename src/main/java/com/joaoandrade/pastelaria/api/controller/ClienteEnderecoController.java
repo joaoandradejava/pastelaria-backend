@@ -30,6 +30,10 @@ import com.joaoandrade.pastelaria.domain.service.PermissaoService;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroClienteEnderecoService;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroClienteService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Cliente Endereço Controller")
 @RestController
 @RequestMapping("/clientes/{clienteId}/enderecos")
 public class ClienteEnderecoController {
@@ -49,6 +53,7 @@ public class ClienteEnderecoController {
 	@Autowired
 	private PermissaoService permissaoService;
 
+	@Operation(summary = "Busca todos os endereços do cliente", description = "Busca todos os endereços do cliente")
 	@GetMapping
 	public List<EnderecoModel> buscarTodos(@PathVariable Long clienteId,
 			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
@@ -62,6 +67,7 @@ public class ClienteEnderecoController {
 		return enderecoModelAssembler.toCollectionModel(cliente.getEnderecos());
 	}
 
+	@Operation(summary = "Busca Endereço do cliente por id", description = "Busca Endereço do cliente por id")
 	@GetMapping("/{enderecoId}")
 	public EnderecoModel buscarEnderecoDoCliente(@PathVariable Long clienteId, @PathVariable Long enderecoId,
 			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
@@ -75,6 +81,7 @@ public class ClienteEnderecoController {
 		return enderecoModelAssembler.toModel(endereco);
 	}
 
+	@Operation(summary = "Cadastra um novo endereço", description = "Cadastra um novo endereço")
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public EnderecoModel cadastrar(@Valid @RequestBody EnderecoInput enderecoInput, @PathVariable Long clienteId,
@@ -94,6 +101,7 @@ public class ClienteEnderecoController {
 		}
 	}
 
+	@Operation(summary = "Deleta o endereço do cliente", description = "Deleta o endereço do cliente")
 	@DeleteMapping("/{enderecoId}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void deletarEnderecoDoCliente(@PathVariable Long clienteId, @PathVariable Long enderecoId,

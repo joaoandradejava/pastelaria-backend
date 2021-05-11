@@ -37,6 +37,10 @@ import com.joaoandrade.pastelaria.domain.service.ProdutoService;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroProdutoService;
 import com.joaoandrade.pastelaria.domain.util.FormatoImagem;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Produto Controller")
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
@@ -56,6 +60,7 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoService produtoService;
 
+	@Operation(summary = "Busca todos os produtos do sistema - ADMIN", description = "Busca todos os produtos do sistema - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
 	public List<ProdutoModel> buscarTodos() {
@@ -64,6 +69,7 @@ public class ProdutoController {
 		return produtoModelAssembler.toCollectionModel(lista);
 	}
 
+	@Operation(summary = "Busca todos os produtos do sistema por paginação - ADMIN", description = "Busca todos os produtos do sistema por paginação - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/paginacao")
 	public Page<ProdutoModel> buscarTodosPorPaginacao(Pageable pageable, String nome) {
@@ -80,6 +86,7 @@ public class ProdutoController {
 		return page.map(produto -> produtoModelAssembler.toModel(produto));
 	}
 
+	@Operation(summary = "Busca todos os produtos do sistema por paginação disponiveis no estoque", description = "Busca todos os produtos do sistema por paginação disponiveis no estoque")
 	@GetMapping("/disponivel-estoque/paginacao")
 	public Page<ProdutoModel> buscarTodosProdutosDisponiveisNoEstoque(Pageable pageable, String nome) {
 		Page<Produto> page;
@@ -94,6 +101,7 @@ public class ProdutoController {
 		return page.map(produto -> produtoModelAssembler.toModel(produto));
 	}
 
+	@Operation(summary = "Busca um produto pelo seu id", description = "Busca um produto pelo seu id")
 	@GetMapping("/{id}")
 	public ProdutoFullModel buscarPorId(@PathVariable Long id) {
 		Produto produto = cadastroProdutoService.buscarPorId(id);
@@ -101,6 +109,7 @@ public class ProdutoController {
 		return produtoFullModelAssembler.toModel(produto);
 	}
 
+	@Operation(summary = "Cadastra um novo produto no banco de dados - ADMIN", description = "Cadastra um novo produto no banco de dados - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
@@ -114,6 +123,7 @@ public class ProdutoController {
 		}
 	}
 
+	@Operation(summary = "Atualiza um produto pelo seu id - ADMIN", description = "Atualiza um produto pelo seu id - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ProdutoFullModel atualizar(@Valid @RequestBody ProdutoInput produtoInput, @PathVariable Long id) {
@@ -128,6 +138,7 @@ public class ProdutoController {
 		}
 	}
 
+	@Operation(summary = "deleta um produto pelo seu id - ADMIN", description = "deleta um produto pelo seu id - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -135,6 +146,7 @@ public class ProdutoController {
 		cadastroProdutoService.deletarPorId(id);
 	}
 
+	@Operation(summary = "Adiciona desconto no preço do produto - ADMIN", description = "Adiciona desconto no preço do produto - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}/desconto")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -143,6 +155,7 @@ public class ProdutoController {
 		produtoService.adicionarDesconto(produtoDescontoInput.getDesconto(), id);
 	}
 
+	@Operation(summary = "remove o desconto no preço do produto - ADMIN", description = " remove o desconto no preço do produto - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}/desconto")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -150,6 +163,7 @@ public class ProdutoController {
 		produtoService.removerDesconto(id);
 	}
 
+	@Operation(summary = "Coloca produto disponivel no estoque - ADMIN", description = "Coloca produto disponivel no estoque - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}/estoque")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -157,6 +171,7 @@ public class ProdutoController {
 		produtoService.colocarProdutoDisponivelNoEstoque(id);
 	}
 
+	@Operation(summary = "Tira produto do estoque - ADMIN", description = "Tira produto do estoque - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}/estoque")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -164,6 +179,7 @@ public class ProdutoController {
 		produtoService.tirarProdutoDisponivelNoEstoque(id);
 	}
 
+	@Operation(summary = "Adiciona foto no produto - ADMIN", description = "Adiciona foto no produto - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}/foto")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -181,6 +197,7 @@ public class ProdutoController {
 
 	}
 
+	@Operation(summary = "Remove foto do produto - ADMIN", description = "Remove foto do produto - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}/foto")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)

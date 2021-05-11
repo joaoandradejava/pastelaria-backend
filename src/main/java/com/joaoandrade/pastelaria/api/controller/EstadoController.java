@@ -27,6 +27,10 @@ import com.joaoandrade.pastelaria.api.model.EstadoModel;
 import com.joaoandrade.pastelaria.domain.model.Estado;
 import com.joaoandrade.pastelaria.domain.service.crud.CadastroEstadoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Estado Controller")
 @RestController
 @RequestMapping("/estados")
 public class EstadoController {
@@ -40,6 +44,7 @@ public class EstadoController {
 	@Autowired
 	private EstadoInputDisassembler estadoInputDisassembler;
 
+	@Operation(summary = "Busca todos os estados do banco de dados", description = "Busca todos os estados do banco de dados")
 	@GetMapping
 	public List<EstadoModel> buscarTodos() {
 		List<Estado> lista = cadastroEstadoService.buscarTodos();
@@ -47,6 +52,7 @@ public class EstadoController {
 		return estadoModelAssembler.toCollectionModel(lista);
 	}
 
+	@Operation(summary = "Busca todos os estados de forma paginada do banco de dados", description = "Busca todos os estados de forma paginada do banco de dados")
 	@GetMapping("/paginacao")
 	public Page<EstadoModel> buscarTodosPorPaginacao(Pageable pageable, String nome) {
 		Page<Estado> page;
@@ -62,6 +68,7 @@ public class EstadoController {
 		return page.map(estado -> estadoModelAssembler.toModel(estado));
 	}
 
+	@Operation(summary = "Busca um estado por id", description = "Busca um estado por id")
 	@GetMapping("/{id}")
 	public EstadoModel buscarPorId(@PathVariable Long id) {
 		Estado estado = cadastroEstadoService.buscarPorId(id);
@@ -69,6 +76,7 @@ public class EstadoController {
 		return estadoModelAssembler.toModel(estado);
 	}
 
+	@Operation(summary = "Cadastra um novo Estado no banco de dados - ADMIN", description = "Cadastra um novo Estado no banco de dados - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
@@ -78,6 +86,7 @@ public class EstadoController {
 		return estadoModelAssembler.toModel(estado);
 	}
 
+	@Operation(summary = "Atualiza um estado já existente por id - ADMIN", description = "Atualiza um estado já existente por id - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public EstadoModel atualizar(@Valid @RequestBody EstadoInput estadoInput, @PathVariable Long id) {
@@ -88,6 +97,7 @@ public class EstadoController {
 		return estadoModelAssembler.toModel(estado);
 	}
 
+	@Operation(summary = "Deleta um estado por id - ADMIN", description = "Deleta um estado por id - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)

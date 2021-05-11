@@ -59,8 +59,7 @@ public class ClienteService {
 	}
 
 	@Transactional
-	public String esqueciASenha(String email) {
-		Cliente cliente = cadastroClienteService.buscarPorEmail(email);
+	public String esqueciASenha(Cliente cliente) {
 		String novaSenha = "CarraraTaxi";
 		Random random = new Random();
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
