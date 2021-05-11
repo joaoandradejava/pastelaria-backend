@@ -101,6 +101,16 @@ public class ProdutoController {
 		return page.map(produto -> produtoModelAssembler.toModel(produto));
 	}
 
+	@Operation(summary = "Busca todos os produtos pela categoria e que estão disponiveis no estoque", description = "Busca todos os produtos pela categoria e que estão disponiveis no estoque")
+	@GetMapping("/categoria/{categoriaId}/disponivel-estoque/paginacao")
+	public Page<ProdutoModel> buscarTodosProdutosPorCategoriaEDisponiveisNoEstoque(Pageable pageable,
+			@PathVariable Long categoriaId) {
+		Page<Produto> page = cadastroProdutoService.buscarTodosProdutosPorCategoriaEDisponiveisNoEstoque(pageable,
+				categoriaId);
+
+		return page.map(produto -> produtoModelAssembler.toModel(produto));
+	}
+
 	@Operation(summary = "Busca um produto pelo seu id", description = "Busca um produto pelo seu id")
 	@GetMapping("/{id}")
 	public ProdutoFullModel buscarPorId(@PathVariable Long id) {

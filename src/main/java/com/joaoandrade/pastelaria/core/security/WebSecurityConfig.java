@@ -28,7 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String[] PUBLIC_POST = { "/clientes" };
 	private static final String[] PUBLIC_PUT = { "/clientes/esqueci-senha" };
-	private static final String[] PUBLIC_GET = { "/produtos/disponivel-estoque/paginacao", "/categorias" };
+	private static final String[] PUBLIC_GET = { "/produtos/disponivel-estoque/paginacao", "/categorias",
+			"/produtos/categoria/{categoriaId}/disponivel-estoque/paginacao" };
 
 	@Autowired
 	private UserDetailsService userDetailsService;

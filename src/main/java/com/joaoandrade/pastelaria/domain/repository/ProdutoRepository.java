@@ -24,4 +24,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
 	@Query("select p from Produto p where p.isTemEstoque = true and p.id = ?1")
 	Optional<Produto> buscarPorIdEDisponivelNoEstoque(Long id);
+
+	@Query("select p from Produto p where p.categoria.id = ?1 and p.isTemEstoque = true")
+	Page<Produto> buscarTodosProdutosPorCategoriaEDisponiveisNoEstoque(Long categoriaId, Pageable pageable);
 }

@@ -44,6 +44,11 @@ public class CadastroProdutoService {
 		return repository.buscarTodosProdutosDisponiveisNoEstoqueEPorNome(nome, pageable);
 	}
 
+	public Page<Produto> buscarTodosProdutosPorCategoriaEDisponiveisNoEstoque(Pageable pageable, Long categoriaId) {
+		cadastroCategoriaService.buscarPorId(categoriaId);
+		return repository.buscarTodosProdutosPorCategoriaEDisponiveisNoEstoque(categoriaId, pageable);
+	}
+
 	public Produto buscarPorId(Long id) {
 		return repository.findById(id).orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 	}
