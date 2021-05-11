@@ -27,7 +27,8 @@ import com.joaoandrade.pastelaria.core.jwt.JwtUtil;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String[] PUBLIC_POST = { "/clientes" };
-	private static final String[] PUBLIC_GET = { "/produtos/disponivel-estoque/paginacao" };
+	private static final String[] PUBLIC_PUT = { "/clientes/esqueci-senha" };
+	private static final String[] PUBLIC_GET = { "/produtos/disponivel-estoque/paginacao", "/categorias" };
 
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -48,8 +49,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().cors();
-		http.authorizeRequests().antMatchers(HttpMethod.POST, PUBLIC_POST).permitAll()
-				.antMatchers(HttpMethod.GET, PUBLIC_GET).permitAll().anyRequest().authenticated();
+		http.authorizeRequests().antMatchers(HttpMethod.PUT, PUBLIC_PUT).permitAll()
+				.antMatchers(HttpMethod.POST, PUBLIC_POST).permitAll().antMatchers(HttpMethod.GET, PUBLIC_GET)
+				.permitAll().anyRequest().authenticated();
 		http.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil));
 		http.addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 
