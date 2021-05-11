@@ -40,8 +40,8 @@ insert into endereco (cep, endereco, bairro, complemento, numero, cidade, estado
 ('51020000', 'Avenida Boa Viagem', 'Boa Viagem', 'de 2176/2177 a 3077/3078', '220', 'Recife', 1, 1);
 
 insert into pedido(data, situacao_pagamento, situacao_pedido, valor_total, cliente_id, endereco_de_entrega_id) values
-('2021-05-09 12:00:00', 'PENDENTE', 'AGUARDANDO_PAGAMENTO', 21.97, 1, 3),
-('2021-05-10 14:00:00', 'PENDENTE', 'AGUARDANDO_PAGAMENTO', 179.99, 1, 3);
+('2021-05-09 12:00:00', 'PENDENTE', 'FAZENDO_A_COMIDA', 21.97, 1, 3),
+('2021-05-10 14:00:00', 'PENDENTE', 'FAZENDO_A_COMIDA', 179.99, 1, 3);
 
 insert into item_pedido (pedido_id, produto_id, desconto, quantidade, valor) values
 (1, 2, 0, 2, 6.99), (1, 4, 0, 1, 7.99),

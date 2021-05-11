@@ -1,5 +1,16 @@
 package com.joaoandrade.pastelaria.domain.model.enumeration;
 
 public enum SituacaoPedido {
-	CANCELADO, AGUARDANDO_PAGAMENTO, SAIU_PARA_ENTREGA, ENTREGUE, FAZENDO_A_COMIDA;
+	CANCELADO("Cancelado"), SAIU_PARA_ENTREGA("Saiu Para Entrega"), CONCLUIDO("Concluido"),
+	FAZENDO_A_COMIDA("Fazendo a Comida");
+
+	private String descricao;
+
+	private SituacaoPedido(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
 }

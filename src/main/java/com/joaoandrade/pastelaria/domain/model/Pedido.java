@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.joaoandrade.pastelaria.domain.model.enumeration.SituacaoPagamento;
 import com.joaoandrade.pastelaria.domain.model.enumeration.SituacaoPedido;
 
 @Entity
@@ -43,7 +45,7 @@ public class Pedido {
 	@JoinColumn(name = "endereco_de_entrega_id")
 	private Endereco enderecoDeEntrega;
 
-	@OneToMany(mappedBy = "id.pedido")
+	@OneToMany(mappedBy = "id.pedido", cascade = CascadeType.ALL)
 	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Pedido() {
@@ -135,6 +137,20 @@ public class Pedido {
 		}
 
 		this.valorTotal = valorTotal;
+	}
+
+	public void cancelarPedido() {
+		setSituacaoPedido(SituacaoPedido.CANCELADO);
+		getPagamento().setSituacaoPagamento(SituacaoPagamento.CANCELADO);
+	}
+
+	public void sairParaEntrega() {
+		setSituacaoPedido(SituacaoPedido.SAIU_PARA_ENTREGA);
+	}
+
+	public void concluir() {
+		setSituacaoPedido(SituacaoPedido.CONCLUIDO);
+		getPagamento().setSituacaoPagamento(SituacaoPagamento.QUITADO);
 	}
 
 	@Override

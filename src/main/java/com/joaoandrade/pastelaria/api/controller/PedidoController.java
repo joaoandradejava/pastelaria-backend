@@ -10,9 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -63,6 +66,15 @@ public class PedidoController {
 	@Autowired
 	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
 
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/buscar-todos/paginacao")
+	public Page<PedidoResumoModel> buscarTodosOsPedidosDoSistema(
+			@PageableDefault(sort = "data", direction = Direction.DESC) Pageable pageable) {
+		Page<Pedido> page = pedidoService.buscarTodosOsPedidosDoSistema(pageable);
+
+		return page.map(pedido -> pedidoResumoModelAssembler.toModel(pedido));
+	}
+
 	@GetMapping
 	public Page<PedidoResumoModel> buscarTodosPedidosDoCliente(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
@@ -70,6 +82,14 @@ public class PedidoController {
 		Page<Pedido> page = pedidoService.buscarTodosPedidosDoCliente(clienteAutenticado.getId(), pageable);
 
 		return page.map(pedido -> pedidoResumoModelAssembler.toModel(pedido));
+	}
+
+	@GetMapping("/{pedidoId}")
+	public PedidoFullModel buscarPedidoDoCliente(@AuthenticationPrincipal ClienteAutenticado clienteAutenticado,
+			@PathVariable Long pedidoId) {
+		Pedido pedido = pedidoService.buscarPedidoDoCliente(clienteAutenticado.getId(), pedidoId);
+
+		return pedidoFullModelAssembler.toModel(pedido);
 	}
 
 	@PostMapping
@@ -85,6 +105,35 @@ public class PedidoController {
 		} catch (ObjetoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage());
 		}
+	}
+
+	@PutMapping("/{pedidoId}/cancelado")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void cancelarPedido(@PathVariable Long pedidoId,
+			@AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
+		pedidoService.cancelarPedido(clienteAutenticado.getId(), pedidoId);
+
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/{pedidoId}/saiu-para-entrega")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void sairParaEntrega(@PathVariable Long pedidoId) {
+		pedidoService.sairParaEntrega(pedidoId);
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/{pedidoId}/concluido")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void concluido(@PathVariable Long pedidoId) {
+		pedidoService.concluido(pedidoId);
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/{pedidoId}/cancelado-imprevisto")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void cancelarPedidoPorImprevisto(@PathVariable Long pedidoId) {
+		pedidoService.cancelarPedidoPorImprevisto(pedidoId);
 	}
 
 	private Pedido montarPedido(@Valid PedidoInput pedidoInput, ClienteAutenticado clienteAutenticado) {
