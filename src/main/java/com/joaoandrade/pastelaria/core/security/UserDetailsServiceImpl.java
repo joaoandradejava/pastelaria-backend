@@ -26,8 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 
 		Cliente cliente = obj.get();
-		return new ClienteAutenticado(cliente.getId(), cliente.getEmail(), cliente.getSenha(), cliente.isAdmin(),
-				cliente.getFuncoes());
+		return new ClienteAutenticado(cliente.getId(), cliente.getNome(), cliente.getEmail(), cliente.getSenha(),
+				cliente.isAdmin(), cliente.getFuncoes());
 	}
 
 }

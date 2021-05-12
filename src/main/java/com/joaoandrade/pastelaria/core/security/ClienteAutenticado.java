@@ -15,6 +15,7 @@ public class ClienteAutenticado implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	private String nome;
 	private String email;
 	private String senha;
 	private Boolean isAdmin;
@@ -23,8 +24,9 @@ public class ClienteAutenticado implements UserDetails {
 	public ClienteAutenticado() {
 	}
 
-	public ClienteAutenticado(Long id, String email, String senha, Boolean isAdmin, Set<Funcao> funcoes) {
+	public ClienteAutenticado(Long id, String nome, String email, String senha, Boolean isAdmin, Set<Funcao> funcoes) {
 		this.id = id;
+		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
 		this.isAdmin = isAdmin;
@@ -34,6 +36,10 @@ public class ClienteAutenticado implements UserDetails {
 
 	public Long getId() {
 		return id;
+	}
+
+	public String getNome() {
+		return nome;
 	}
 
 	public Boolean getIsAdmin() {

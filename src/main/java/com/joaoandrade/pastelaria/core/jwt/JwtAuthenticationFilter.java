@@ -59,6 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		StringBuilder builder = new StringBuilder();
 		builder.append("{\n");
 		builder.append("\"id\": " + clienteAutenticado.getId() + ", \n");
+		builder.append("\"nome\": \"" + clienteAutenticado.getNome() + "\", \n");
 		builder.append("\"tokenJwt\": \"" + tokenJwt + "\", \n");
 		builder.append("\"isAdmin\": " + clienteAutenticado.getIsAdmin() + " \n");
 		builder.append("}");
