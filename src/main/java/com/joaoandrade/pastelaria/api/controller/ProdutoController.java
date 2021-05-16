@@ -23,11 +23,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.joaoandrade.pastelaria.api.assembler.ProdutoAdminModelAssembler;
 import com.joaoandrade.pastelaria.api.assembler.ProdutoFullModelAssembler;
 import com.joaoandrade.pastelaria.api.assembler.ProdutoModelAssembler;
 import com.joaoandrade.pastelaria.api.disassembler.ProdutoInputDisassembler;
 import com.joaoandrade.pastelaria.api.input.ProdutoDescontoInput;
 import com.joaoandrade.pastelaria.api.input.ProdutoInput;
+import com.joaoandrade.pastelaria.api.model.ProdutoAdminModel;
 import com.joaoandrade.pastelaria.api.model.ProdutoFullModel;
 import com.joaoandrade.pastelaria.api.model.ProdutoModel;
 import com.joaoandrade.pastelaria.domain.exception.CategoriaNaoEncontradaException;
@@ -60,30 +62,33 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoService produtoService;
 
+	@Autowired
+	private ProdutoAdminModelAssembler produtoAdminModelAssembler;
+
 	@Operation(summary = "Busca todos os produtos do sistema - ADMIN", description = "Busca todos os produtos do sistema - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
-	public List<ProdutoModel> buscarTodos() {
+	public List<ProdutoAdminModel> buscarTodos() {
 		List<Produto> lista = cadastroProdutoService.buscarTodos();
 
-		return produtoModelAssembler.toCollectionModel(lista);
+		return produtoAdminModelAssembler.toCollectionModel(lista);
 	}
 
 	@Operation(summary = "Busca todos os produtos do sistema por paginação - ADMIN", description = "Busca todos os produtos do sistema por paginação - ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/paginacao")
-	public Page<ProdutoModel> buscarTodosPorPaginacao(Pageable pageable, String nome) {
+	public Page<ProdutoAdminModel> buscarTodosPorPaginacao(Pageable pageable, String nome) {
 		Page<Produto> page;
 
 		if (StringUtils.hasLength(nome)) {
 			page = cadastroProdutoService.buscarTodosPorPaginacaoENome(nome, pageable);
 
-			return page.map(produto -> produtoModelAssembler.toModel(produto));
+			return page.map(produto -> produtoAdminModelAssembler.toModel(produto));
 		}
 
 		page = cadastroProdutoService.buscarTodosPorPaginacao(pageable);
 
-		return page.map(produto -> produtoModelAssembler.toModel(produto));
+		return page.map(produto -> produtoAdminModelAssembler.toModel(produto));
 	}
 
 	@Operation(summary = "Busca todos os produtos do sistema por paginação disponiveis no estoque", description = "Busca todos os produtos do sistema por paginação disponiveis no estoque")
