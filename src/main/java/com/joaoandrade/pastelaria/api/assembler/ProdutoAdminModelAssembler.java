@@ -21,7 +21,7 @@ public class ProdutoAdminModelAssembler {
 		ProdutoAdminModel produtoAdminModel = modelMapper.map(produto, ProdutoAdminModel.class);
 		produtoAdminModel.setIsTemFoto(StringUtils.hasLength(produto.getAvatarUrl()) ? true : false);
 
-		return modelMapper.map(produto, ProdutoAdminModel.class);
+		return produtoAdminModel;
 	}
 
 	public List<ProdutoAdminModel> toCollectionModel(List<Produto> lista) {
