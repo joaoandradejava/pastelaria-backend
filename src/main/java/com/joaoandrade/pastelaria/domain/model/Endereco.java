@@ -1,11 +1,15 @@
 package com.joaoandrade.pastelaria.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Endereco {
@@ -25,6 +29,9 @@ public class Endereco {
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
+
+	@OneToMany(mappedBy = "enderecoDeEntrega")
+	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Endereco() {
 	}
@@ -112,6 +119,14 @@ public class Endereco {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	@Override

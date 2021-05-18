@@ -45,6 +45,11 @@ public class CadastroClienteEnderecoService {
 	public void deletarEnderecoDoCliente(Long clienteId, Long enderecoId) {
 		Endereco endereco = buscarEnderecoDoCliente(clienteId, enderecoId);
 
+		if (!endereco.getPedidos().isEmpty() && endereco.getCliente() != null) {
+			endereco.setCliente(null);
+			return;
+		}
+
 		try {
 			repository.deleteById(endereco.getId());
 			repository.flush();
@@ -53,6 +58,11 @@ public class CadastroClienteEnderecoService {
 					String.format("Não foi possivel deletar o Endereço pois ele estar em uso no sistema!"));
 		}
 
+	}
+
+	@Transactional
+	public Endereco atualizar(Endereco endereco) {
+		return repository.save(endereco);
 	}
 
 }

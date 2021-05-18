@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -91,6 +92,17 @@ public class ClienteEnderecoController {
 
 		Endereco endereco = cadastroClienteEnderecoService
 				.cadastrar(enderecoInputDisassembler.toDomainModel(enderecoInput), clienteId);
+
+		return enderecoModelAssembler.toModel(endereco);
+	}
+
+	@Operation(summary = "Atualiza o endereço por id", description = "Atualiza o endereço por id")
+	@PutMapping("/{enderecoId}")
+	public EnderecoModel atualizar(@Valid @RequestBody EnderecoInput enderecoInput, @PathVariable Long clienteId,
+			@PathVariable Long enderecoId, @AuthenticationPrincipal ClienteAutenticado clienteAutenticado) {
+		Endereco endereco = cadastroClienteEnderecoService.buscarEnderecoDoCliente(clienteId, enderecoId);
+		enderecoInputDisassembler.copyToDomainModel(enderecoInput, endereco);
+		endereco = cadastroClienteEnderecoService.atualizar(endereco);
 
 		return enderecoModelAssembler.toModel(endereco);
 	}

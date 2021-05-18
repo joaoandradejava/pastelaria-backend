@@ -18,4 +18,5 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
 	@Query("select p from Pedido p where p.id = ?2 and p.cliente.id = ?1")
 	Optional<Pedido> buscarPedidoDoCliente(Long clienteId, Long pedidoId);
+
 }
