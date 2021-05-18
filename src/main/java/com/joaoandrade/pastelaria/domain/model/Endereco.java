@@ -20,9 +20,7 @@ public class Endereco {
 	private String bairro;
 	private String cidade;
 
-	@ManyToOne
-	@JoinColumn(name = "estado_id")
-	private Estado estado;
+	private String estado;
 
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
@@ -32,7 +30,7 @@ public class Endereco {
 	}
 
 	public Endereco(Long id, String cep, String endereco, String numero, String complemento, String bairro,
-			String cidade, Estado estado, Cliente cliente) {
+			String cidade, String estado, Cliente cliente) {
 		this.id = id;
 		this.cep = cep;
 		this.endereco = endereco;
@@ -100,11 +98,11 @@ public class Endereco {
 		this.cidade = cidade;
 	}
 
-	public Estado getEstado() {
+	public String getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Estado estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 

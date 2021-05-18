@@ -1,4 +1,3 @@
-truncate table estado restart identity cascade;
 truncate table categoria restart identity cascade;
 truncate table produto restart identity cascade;
 truncate table cliente restart identity cascade;
@@ -6,9 +5,6 @@ truncate table funcao restart identity cascade;
 truncate table endereco restart identity cascade;
 truncate table pedido restart identity cascade;
 truncate table item_pedido restart identity cascade;
-
-insert into estado(nome) values
-('Pernambuco'), ('São Paulo'), ('Rio de Janeiro');
 
 insert into categoria(nome) values
 ('Pasteis'), ('Refrigerantes'), ('Bebidas Alcoólicas');
@@ -34,10 +30,10 @@ insert into funcao(cliente_id, funcoes) values
 (1, 'ADMIN'), (1, 'CLIENTE'),
 (2, 'CLIENTE');
 
-insert into endereco (cep, endereco, bairro, complemento, numero, cidade, estado_id, cliente_id) values
-('01001000', 'Praça da Sé', 'Sé', 'lado ímpar', '330', 'São Paulo', 2, 1),
-('01001000', 'Praça da Sé', 'Sé', 'lado ímpar', '320', 'São Paulo', 2, 2),
-('51020000', 'Avenida Boa Viagem', 'Boa Viagem', 'de 2176/2177 a 3077/3078', '220', 'Recife', 1, 1);
+insert into endereco (cep, endereco, bairro, complemento, numero, cidade, estado, cliente_id) values
+('01001000', 'Praça da Sé', 'Sé', 'lado ímpar', '330', 'São Paulo', 'PE', 1),
+('01001000', 'Praça da Sé', 'Sé', 'lado ímpar', '320', 'São Paulo', 'PE', 2),
+('51020000', 'Avenida Boa Viagem', 'Boa Viagem', 'de 2176/2177 a 3077/3078', '220', 'Recife', 'PE', 1);
 
 insert into pedido(data, situacao_pagamento, situacao_pedido, valor_total, cliente_id, endereco_de_entrega_id) values
 ('2021-05-09 12:00:00', 'PENDENTE', 'FAZENDO_A_COMIDA', 21.97, 1, 3),

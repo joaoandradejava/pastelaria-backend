@@ -1,8 +1,6 @@
 package com.joaoandrade.pastelaria.api.input;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class EnderecoInput {
@@ -30,9 +28,9 @@ public class EnderecoInput {
 	@NotBlank
 	private String cidade;
 
-	@Valid
-	@NotNull
-	private EstadoIdInput estado;
+	@Size(max = 255)
+	@NotBlank
+	private String estado;
 
 	public EnderecoInput() {
 	}
@@ -85,11 +83,11 @@ public class EnderecoInput {
 		this.cidade = cidade;
 	}
 
-	public EstadoIdInput getEstado() {
+	public String getEstado() {
 		return estado;
 	}
 
-	public void setEstado(EstadoIdInput estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 

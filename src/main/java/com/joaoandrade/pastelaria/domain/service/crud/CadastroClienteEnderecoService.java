@@ -10,7 +10,6 @@ import com.joaoandrade.pastelaria.domain.exception.EntidadeEmUsoException;
 import com.joaoandrade.pastelaria.domain.exception.NegocioException;
 import com.joaoandrade.pastelaria.domain.model.Cliente;
 import com.joaoandrade.pastelaria.domain.model.Endereco;
-import com.joaoandrade.pastelaria.domain.model.Estado;
 import com.joaoandrade.pastelaria.domain.repository.EnderecoRepository;
 
 @Service
@@ -18,9 +17,6 @@ public class CadastroClienteEnderecoService {
 
 	@Autowired
 	private CadastroClienteService cadastroClienteService;
-
-	@Autowired
-	private CadastroEstadoService cadastroEstadoService;
 
 	@Autowired
 	private EnderecoRepository repository;
@@ -40,9 +36,7 @@ public class CadastroClienteEnderecoService {
 	@Transactional
 	public Endereco cadastrar(Endereco endereco, Long clienteId) {
 		Cliente cliente = cadastroClienteService.buscarPorId(clienteId);
-		Estado estado = cadastroEstadoService.buscarPorId(endereco.getEstado().getId());
 		endereco.setCliente(cliente);
-		endereco.setEstado(estado);
 
 		return repository.save(endereco);
 	}

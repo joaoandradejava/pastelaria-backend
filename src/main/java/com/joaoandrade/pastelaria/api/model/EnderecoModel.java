@@ -8,7 +8,7 @@ public class EnderecoModel {
 	private String complemento;
 	private String bairro;
 	private String cidade;
-	private EstadoModel estado;
+	private String estado;
 
 	public EnderecoModel() {
 	}
@@ -69,11 +69,11 @@ public class EnderecoModel {
 		this.cidade = cidade;
 	}
 
-	public EstadoModel getEstado() {
+	public String getEstado() {
 		return estado;
 	}
 
-	public void setEstado(EstadoModel estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 

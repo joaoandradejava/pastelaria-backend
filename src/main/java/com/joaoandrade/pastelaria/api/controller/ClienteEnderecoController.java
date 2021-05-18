@@ -22,8 +22,6 @@ import com.joaoandrade.pastelaria.api.input.EnderecoInput;
 import com.joaoandrade.pastelaria.api.model.EnderecoModel;
 import com.joaoandrade.pastelaria.core.security.ClienteAutenticado;
 import com.joaoandrade.pastelaria.domain.exception.AcessoNegadoException;
-import com.joaoandrade.pastelaria.domain.exception.EstadoNaoEncontradoException;
-import com.joaoandrade.pastelaria.domain.exception.NegocioException;
 import com.joaoandrade.pastelaria.domain.model.Cliente;
 import com.joaoandrade.pastelaria.domain.model.Endereco;
 import com.joaoandrade.pastelaria.domain.service.PermissaoService;
@@ -91,14 +89,10 @@ public class ClienteEnderecoController {
 					"Você não tem autorização para cadastrar o endereço de um outro cliente no sistema!");
 		}
 
-		try {
-			Endereco endereco = cadastroClienteEnderecoService
-					.cadastrar(enderecoInputDisassembler.toDomainModel(enderecoInput), clienteId);
+		Endereco endereco = cadastroClienteEnderecoService
+				.cadastrar(enderecoInputDisassembler.toDomainModel(enderecoInput), clienteId);
 
-			return enderecoModelAssembler.toModel(endereco);
-		} catch (EstadoNaoEncontradoException e) {
-			throw new NegocioException(e.getMessage());
-		}
+		return enderecoModelAssembler.toModel(endereco);
 	}
 
 	@Operation(summary = "Deleta o endereço do cliente", description = "Deleta o endereço do cliente")
