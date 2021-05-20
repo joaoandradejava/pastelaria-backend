@@ -2,7 +2,6 @@ package com.joaoandrade.pastelaria.api.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
@@ -10,9 +9,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -96,19 +93,17 @@ public class ProdutoController {
 
 	@Operation(summary = "Busca todos os produtos do sistema por paginação disponiveis no estoque", description = "Busca todos os produtos do sistema por paginação disponiveis no estoque")
 	@GetMapping("/disponivel-estoque/paginacao")
-	public ResponseEntity<Page<ProdutoModel>> buscarTodosProdutosDisponiveisNoEstoque(Pageable pageable, String nome) {
+	public Page<ProdutoModel> buscarTodosProdutosDisponiveisNoEstoque(Pageable pageable, String nome) {
 		Page<Produto> page;
 
 		if (StringUtils.hasLength(nome)) {
 			page = cadastroProdutoService.buscarTodosProdutosDisponiveisNoEstoqueEPorNome(pageable, nome);
 
-			return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES))
-					.body(page.map(produto -> produtoModelAssembler.toModel(produto)));
+			return page.map(produto -> produtoModelAssembler.toModel(produto));
 		}
 
 		page = cadastroProdutoService.buscarTodosProdutosDisponiveisNoEstoque(pageable);
-		return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES))
-				.body(page.map(produto -> produtoModelAssembler.toModel(produto)));
+		return page.map(produto -> produtoModelAssembler.toModel(produto));
 	}
 
 	@Operation(summary = "Busca todos os produtos pela categoria e que estão disponiveis no estoque", description = "Busca todos os produtos pela categoria e que estão disponiveis no estoque")
