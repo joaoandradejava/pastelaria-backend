@@ -19,7 +19,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 	@Query("select p from Produto p where p.isTemEstoque = true")
 	Page<Produto> buscarTodosProdutosDisponiveisNoEstoque(Pageable pageable);
 
-	@Query("select p from Produto p where p.isTemEstoque = true and lower(p.nome) like lower(concat('%', ?1, '%'))")
+	@Query("from Produto p  where p.isTemEstoque = true and lower(p.nome) like lower(concat('%', ?1, '%'))")
 	Page<Produto> buscarTodosProdutosDisponiveisNoEstoqueEPorNome(String nome, Pageable pageable);
 
 	@Query("select p from Produto p where p.isTemEstoque = true and p.id = ?1")
