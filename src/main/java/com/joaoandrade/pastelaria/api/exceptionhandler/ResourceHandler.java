@@ -40,7 +40,6 @@ public class ResourceHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleExceptionGenerico(Exception ex, WebRequest request) {
-		ex.printStackTrace();
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 		Error error = Error.ERRO_INTERNO_NO_SERVIDOR;
 		String message = "Ocorreu um erro inesperado no servidor(backend), se o problema persistir recomendo que entre em contato com o desenvolvedor da API.";
