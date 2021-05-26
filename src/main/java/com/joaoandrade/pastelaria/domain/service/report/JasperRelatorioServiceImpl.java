@@ -1,6 +1,6 @@
 package com.joaoandrade.pastelaria.domain.service.report;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +17,8 @@ public class JasperRelatorioServiceImpl implements RelatorioService {
 
 	@Override
 	public String gerarRelatorio(String nomeRelatorio, Map<String, Object> parametros, List<?> lista) throws Exception {
-		String caminhoRelatorio = "src" + File.separator + "main" + File.separator + "resources" + File.separator
-				+ "relatorios" + File.separator + nomeRelatorio + ".jasper";
+		InputStream caminhoRelatorio = getClass().getResourceAsStream("/relatorios/" + nomeRelatorio + ".jasper");
+
 		JRBeanCollectionDataSource connection = new JRBeanCollectionDataSource(lista);
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(caminhoRelatorio, parametros, connection);
