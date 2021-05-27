@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.joaoandrade.pastelaria.domain.dto.ProdutoMaisVendidoDTO;
 import com.joaoandrade.pastelaria.domain.exception.ErroInternoNoServidorException;
 import com.joaoandrade.pastelaria.domain.repository.ItemPedidoRepository;
+import com.joaoandrade.pastelaria.domain.repository.ProdutoRepository;
 import com.joaoandrade.pastelaria.domain.service.report.RelatorioService;
 
 @Service
@@ -18,6 +19,9 @@ public class EstatisticaService {
 
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+
+	@Autowired
+	private ProdutoRepository produtoRepository;
 
 	@Autowired
 	private RelatorioService relatorioService;
@@ -31,6 +35,19 @@ public class EstatisticaService {
 			Map<String, Object> parametros = new HashMap<>();
 			String relatorioEmBase64 = relatorioService.gerarRelatorio("produtos-mais-vendidos", parametros,
 					itemPedidoRepository.buscarProdutosMaisVendidos());
+
+			return relatorioEmBase64;
+		} catch (Exception e) {
+			throw new ErroInternoNoServidorException(
+					"Ocorreu um erro inesperado na geração de relatorio dos produtos mais vendidos");
+		}
+	}
+
+	public String gerarRelatorioDosProdutos() {
+		try {
+			Map<String, Object> parametros = new HashMap<>();
+			String relatorioEmBase64 = relatorioService.gerarRelatorio("produtos", parametros,
+					produtoRepository.buscarTodosProdutoParaGerarRelatorio());
 
 			return relatorioEmBase64;
 		} catch (Exception e) {

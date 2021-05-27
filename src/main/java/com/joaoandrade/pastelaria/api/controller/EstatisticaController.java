@@ -44,4 +44,13 @@ public class EstatisticaController {
 
 		return new RelatorioDTO(relatorioEmBase64);
 	}
+
+	@Operation(summary = "Gera um relatorio dos produtos - ADMIN", description = "Gera um relatorio dos produtos - ADMIN")
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/produtos/relatorio")
+	public RelatorioDTO gerarRelatorioDosProdutos() {
+		String relatorioEmBase64 = estatisticaService.gerarRelatorioDosProdutos();
+
+		return new RelatorioDTO(relatorioEmBase64);
+	}
 }

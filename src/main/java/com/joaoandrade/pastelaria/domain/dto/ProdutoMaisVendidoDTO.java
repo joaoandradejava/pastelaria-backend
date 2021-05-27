@@ -4,12 +4,12 @@ public class ProdutoMaisVendidoDTO {
 
 	private final Long id;
 	private final String nome;
-	private final Long totalVendido;
+	private final String totalVendido;
 
 	public ProdutoMaisVendidoDTO(Long id, String nome, Long totalVendido) {
 		this.id = id;
 		this.nome = nome;
-		this.totalVendido = totalVendido;
+		this.totalVendido = totalVendido + "x";
 	}
 
 	public Long getId() {
@@ -20,7 +20,7 @@ public class ProdutoMaisVendidoDTO {
 		return nome;
 	}
 
-	public Long getTotalVendido() {
+	public String getTotalVendido() {
 		return totalVendido;
 	}
 
