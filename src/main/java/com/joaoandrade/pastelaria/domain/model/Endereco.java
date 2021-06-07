@@ -30,7 +30,7 @@ public class Endereco {
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
 
-	@OneToMany(mappedBy = "enderecoDeEntrega")
+	@OneToMany(mappedBy = "enderecoDeEntrega", orphanRemoval = true)
 	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Endereco() {
