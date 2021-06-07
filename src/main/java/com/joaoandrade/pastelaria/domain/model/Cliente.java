@@ -40,7 +40,7 @@ public class Cliente {
 	@OneToMany(mappedBy = "cliente", orphanRemoval = true)
 	private List<Endereco> enderecos = new ArrayList<>();
 
-	@OneToMany(mappedBy = "cliente")
+	@OneToMany(mappedBy = "cliente", orphanRemoval = true)
 	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Cliente() {
